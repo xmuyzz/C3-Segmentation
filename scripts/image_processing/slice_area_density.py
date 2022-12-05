@@ -8,12 +8,12 @@ def get_c3_slice_area(patient_id, c3_slice, seg_dir):
     #seg_path = get_image_path_by_id(patient_id, seg_dir)
     seg_path = seg_dir + '/' + patient_id + '.nrrd'
     seg_sitk =  sitk.ReadImage(seg_path)
-    seg_array  = sitk.GetArrayFromImage(seg_sitk)[c3_slice,:,:]
-    area_per_pixel =  seg_sitk.GetSpacing()[0]*seg_sitk.GetSpacing()[1]
+    seg_array = sitk.GetArrayFromImage(seg_sitk)[c3_slice, :, :]
+    area_per_pixel = seg_sitk.GetSpacing()[0]*seg_sitk.GetSpacing()[1]
 
     muscle_seg = (seg_array==1)*1.0
-    sfat_seg  = (seg_array==2)*1.0
-    vfat_seg  = (seg_array==3)*1.0
+    sfat_seg = (seg_array==2)*1.0
+    vfat_seg = (seg_array==3)*1.0
     
     muscle_area = np.sum(muscle_seg)*area_per_pixel/100
     sfat_area = np.sum(sfat_seg)*area_per_pixel/100
@@ -24,14 +24,15 @@ def get_c3_slice_area(patient_id, c3_slice, seg_dir):
 
 def get_c3_slice_density(patient_id, c3_slice, seg_dir, img_dir):
     
-    image_path = seg_dir + '/' + patient_id + '.nrrd'
+    image_path = img_dir + '/' + patient_id + '.nrrd'
     #image_path = get_image_path_by_id(patient_id, img_dir)
     image_sitk = sitk.ReadImage(image_path)
-    l3_array = sitk.GetArrayFromImage(image_sitk)[c3_slice,:,:]
+    l3_array = sitk.GetArrayFromImage(image_sitk)[c3_slice, :, :]
     
-    seg_path = get_image_path_by_id(patient_id,seg_dir)
+    seg_path = seg_dir + '/' + patient_id + '.nrrd'
+    #seg_path = get_image_path_by_id(patient_id, seg_dir)
     seg_sitk = sitk.ReadImage(seg_path)
-    seg_array = sitk.GetArrayFromImage(seg_sitk)[c3_slice,:,:]
+    seg_array = sitk.GetArrayFromImage(seg_sitk)[c3_slice, :, :]
 
     muscle_seg = (seg_array==1)*1.0
     sfat_seg = (seg_array==2)*1.0

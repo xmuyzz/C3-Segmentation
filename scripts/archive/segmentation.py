@@ -73,7 +73,7 @@ def train(data_dir, model_dir, name=None, epochs=100, batch_size=1, load_weights
     print('Creating and compiling model...')
     with tf.device('/gpu:0'):
         model = get_unet_2D(
-            2,
+            4,
             (512, 512, 1),
             num_convs=num_convs,
             activation=activation,
@@ -146,4 +146,3 @@ def train(data_dir, model_dir, name=None, epochs=100, batch_size=1, load_weights
 
 
     return model
-
