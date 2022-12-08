@@ -65,3 +65,4 @@ def interpolate(patient_id, path_to_nrrd, interpolation_type, new_spacing, retur
 
 
 
+

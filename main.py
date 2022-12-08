@@ -37,7 +37,7 @@ def slice_selection(proj_dir, dataset):
         csv_write_path=slice_csv_path)
 
 
-def preprocess_data(proj_dir, dataset):
+def preprocess_data(proj_dir):
     """
     Test the Slice Selction Model
     Args:
@@ -45,83 +45,48 @@ def preprocess_data(proj_dir, dataset):
         Model -- C3_Top_Selection_Model_Weight.hdf5 
         Output -- C3_Top_Slice_Prediction.csv' 
     """
-    
     # preprocess data
     if dataset == 'OPC':
         folder = 'BWH'
     elif dataset == 'NonOPC':
         folder = 'NonOPC'
-    raw_img_dir = proj_dir + '/HeadNeck/data/' + folder + '/raw_img'
-    crop_img_dir = proj_dir + '/HeadNeck/data/' + folder + '/crop_img'
+    OPC_img_dir = proj_dir + '/HeadNeck/data/BWH/raw_img'
+    NonOPC_img_dir = proj_dir + '/HeadNeck/data/NonOPC/raw_img'
+    crop_img_dir = proj_dir + '/c3_segmentation/data/segmentation/crop_img'
     if not os.path.exists(crop_img_dir):
         os.makedirs(crop_img_dir)
     print('--- C3 segmentation ---')
-    preprocess(raw_img_dir, crop_img_dir)
+    for raw_img_dir in [OPC_img_dir, NonOPC_img_dir]:
+        preprocess(raw_img_dir, crop_img_dir)
+
+def combine_csv():
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/output/'
+    df_OPC = pd.read_csv(proj_dir + 'OPC_C3_top_slice_pred.csv')
+    df_NonOPC = pd.read_csv(proj_dir + 'NonOPC_C3_top_slice_pred.csv')
+    df = pd.concat([df_OPC, df_NonOPC])
+    df.to_csv(proj_dir + 'C3_top_slice_pred.csv', index=False)
 
 
-def save_img_slice(proj_dir, dataset):
-    if dataset == 'OPC':
-        csv = 'OPC_C3_top_slice_pred.csv'
-        csv_path = proj_dir + '/c3_segmentation/output/' + csv
-        img_dir = proj_dir + '/HeadNeck/data/BWH/crop_img'
-        seg_dir = proj_dir + '/c3_segmentation/output/OPC'
-    elif dataset == 'NonOPC':
-        csv = 'NonOPC_C3_top_slice_pred.csv'
-        csv_path = proj_dir + '/c3_segmentation/output/' + csv
-        img_dir = proj_dir + '/HeadNeck/data/NonOPC/crop_img'
-        seg_dir = proj_dir + '/c3_segmentation/output/NonOPC'
-    save_img_dir = proj_dir + '/c3_segmentation/visualize/img'
-    save_seg_dir = proj_dir + '/c3_segmentation/visualize/seg'
-    if not os.path.exists(save_img_dir):
-        os.makedirs(save_img_dir)
-    if not os.path.exists(save_seg_dir):
-        os.makedirs(save_seg_dir)
-    for dataset in ['OPC', 'NonOPC']:
-        df = pd.read_csv(csv_path)
-        count = 0
-        for ID, Slice in zip(df['patient_id'], df['C3_Predict_slice']):
-            count += 1
-            print(count, ID)
-            for data_dir, save_dir in zip([img_dir, seg_dir], [save_img_dir, save_seg_dir]):
-                data_path = data_dir + '/' + ID + '.nrrd'
-                nrrd = sitk.ReadImage(data_path)
-                arr = sitk.GetArrayFromImage(nrrd)
-                arr_slice = arr[Slice, :, :]
-                save_path = save_dir + '/' + ID + '.nrrd'
-                img_sitk = sitk.GetImageFromArray(arr_slice)
-                img_sitk.SetSpacing(nrrd.GetSpacing())
-                img_sitk.SetOrigin(nrrd.GetOrigin())
-                writer = sitk.ImageFileWriter()
-                writer.SetFileName(save_path)
-                writer.SetUseCompression(True)
-                writer.Execute(img_sitk)
-
-
-def segmentation(proj_dir, dataset):
-    # preprocess data
-    if dataset == 'OPC':
-        folder = 'BWH'
-    elif dataset == 'NonOPC':
-        folder = 'NonOPC'
-    crop_img_dir = proj_dir + '/HeadNeck/data/' + folder + '/crop_img'
-    # segmentation
+def segmentation():
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'    
+    img_dir = proj_dir + '/data/segmentation/img'
     seg_model = 'C3_Top_Segmentation_Model_Weight.hdf5'
-    seg_model_path = proj_dir + '/c3_segmentation/model/test/' + seg_model
-    slice_csv = dataset + '_C3_top_slice_pred.csv'
-    slice_csv_path = proj_dir + '/c3_segmentation/output/' + slice_csv
-    output_seg_dir = proj_dir + '/c3_segmentation/output/' + dataset
-    if not os.path.exists(output_seg_dir):
-        os.makedirs(output_seg_dir)
+    seg_model_path = proj_dir + '/model/test/' + seg_model
+    slice_csv_path = proj_dir + '/output/C3_top_slice_pred.csv'
+    output_dir = proj_dir + '/output/pred'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
     print('--- C3 segmentation ---')
     test_segmentation(
-        image_dir=crop_img_dir,
+        image_dir=img_dir,
         model_weight_path=seg_model_path,
         l3_slice_csv_path=slice_csv_path,
-        output_dir=output_seg_dir)
+        output_dir=output_dir)
 
 
 def get_area(proj_dir, dataset):
-
+    """get C3 muscle area and density
+    """
     slice_csv = dataset + '_C3_top_slice_pred.csv'
     area_csv = dataset + '_C3_body_comp_area_density.csv'
     if dataset == 'OPC':
@@ -132,7 +97,6 @@ def get_area(proj_dir, dataset):
     slice_csv_path = proj_dir + '/c3_segmentation/output/' + slice_csv
     area_csv_path = proj_dir + '/c3_segmentation/output/' + area_csv
     output_seg_dir = proj_dir + '/c3_segmentation/output/' + dataset
-
     print('--- get C3 muscle cross sectional area ---')
     df_infer = pd.read_csv(slice_csv_path)
     df_init = pd.DataFrame()
@@ -164,6 +128,7 @@ def get_area(proj_dir, dataset):
             IDs.append(ID)
     print('bad data:', IDs)
 
+
 if __name__ == '__main__':
 
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -171,9 +136,11 @@ if __name__ == '__main__':
     proj_dir = '/mnt/kannlab_rfa/Zezhong'
     dataset = 'NonOPC'
     
-    #segmentation(proj_dir, dataset)
+    #combine_csv()
+    preprocess_data(proj_dir)
+    #segmentation()
     #get_area(proj_dir, dataset)
-    save_img_slice(proj_dir, dataset)
+    #save_img_slice(proj_dir, dataset)
 
 
 

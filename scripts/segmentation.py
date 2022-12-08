@@ -22,7 +22,7 @@ from scripts.generators import SegmentationSequence
 
 
 def train(data_dir, model_dir, name=None, epochs=100, batch_size=1, load_weights=None,
-          gpus=1, learning_rate=0.0005,  num_convs=2,activation='relu', 
+          gpus=1, learning_rate=0.0005, num_convs=2,activation='relu', 
           upsamlping_modules=5, initial_features=16):
 
     args = locals()   
@@ -103,17 +103,16 @@ def train(data_dir, model_dir, name=None, epochs=100, batch_size=1, load_weights
 
     # Set up the learning rate scheduler
     def lr_func(e):
-        print("                                       Learning Rate Update at Epoch", e)
+        print("Learning Rate Update at Epoch", e)
         if e > 0.75 * epochs:
-            print("                                 Lr ",0.2* learning_rate)
+            print("Lr", 0.2* learning_rate)
             return 0.01 * learning_rate
         elif e > 0.5 * epochs:
-            print("                             Lr ",0.5* learning_rate)
+            print("Lr ", 0.5* learning_rate)
             return 0.1 * learning_rate
         else:
-            print(                           "Lr",1 * learning_rate)
-            return learning_rate
-        
+            print("Lr", 1 * learning_rate)
+            return learning_rate        
    
     lr_scheduler = LearningRateScheduler(lr_func)
     
@@ -136,14 +135,26 @@ def train(data_dir, model_dir, name=None, epochs=100, batch_size=1, load_weights
     
     #history = parallel_model.fit_generator(it, train_batches, steps_per_epoch=313, epochs=epochs, shuffle=True, #validation_steps=val_batches, validation_data=val_generator, use_multiprocessing=False, workers=1, max_queue_size=40, callbacks=#[keras_model_checkpoint, tensorboard, lr_scheduler, early_stopping])  
     
-    history = parallel_model.fit_generator(train_generator, train_batches, epochs=epochs,
-                      shuffle=True, validation_steps=val_batches, validation_data=val_generator, use_multiprocessing=False,
-                      workers=1,max_queue_size=40, callbacks=[keras_model_checkpoint, tensorboard, lr_scheduler])     
+    history = parallel_model.fit_generator(
+        train_generator, 
+        train_batches, 
+        epochs=epochs,
+        shuffle=True, 
+        validation_steps=val_batches, 
+        validation_data=val_generator,
+        use_multiprocessing=False,
+        workers=1,
+        max_queue_size=40, 
+        callbacks=[keras_model_checkpoint, tensorboard, lr_scheduler])     
 
     # Save the template model weights
 #     model.save_weights(os.path.join(output_dir, 'final_model.hdf5'))
 #     run.finish()
 
-
     return model
+
+
+
+
+
 

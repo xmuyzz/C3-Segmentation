@@ -34,7 +34,6 @@ def crop_top_img_only(patient_id, img, crop_shape, return_type, output_dir, imag
     img_arr = sitk.GetArrayFromImage(img)
     img_origin = img.GetOrigin()
     img_spacing = img.GetSpacing()
-
     c, y, x = img_arr.shape
     ## Get center of mass to center the crop in Y plane
     mask_arr = np.copy(img_arr) 
@@ -65,7 +64,8 @@ def crop_top_img_only(patient_id, img, crop_shape, return_type, output_dir, imag
     if norm_type == 'np_interp':
         img_arr = np.interp(img_arr, [-200, 200], [0, 1])
     elif norm_type == 'np_clip':
-        img_arr = np.clip(img_arr, a_min=-200, a_max=200)
+        #img_arr = np.clip(img_arr, a_min=-200, a_max=200)
+        img_arr = np.clip(img_arr, a_min=-175, a_max=275)
         MAX, MIN = img_arr.max(), img_arr.min()
         img_arr = (img_arr - MIN) / (MAX - MIN)
 

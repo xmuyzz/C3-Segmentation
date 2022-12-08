@@ -35,7 +35,8 @@ def clinical():
     print(df['height'])
     ages = []
     for x, y in zip(df['Radiation Therapy Start Date'], df['Date of Birth']):
-        if np.isnan(x):
+        #if np.isnan(x):
+        if pd.isnull(x) or pd.isnull(y):
             age = 0
         else:
             x = int(str(x).split('/')[-1])
