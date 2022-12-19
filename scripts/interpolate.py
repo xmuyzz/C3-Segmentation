@@ -3,7 +3,7 @@ import sys
 import os
 
 
-def interpolate(patient_id, path_to_nrrd, interpolation_type, new_spacing, return_type, output_dir, image_format):
+def interpolate(patient_id, img, interpolation_type, new_spacing, return_type, output_dir):
     
     """
     Interpolates a given nrrd file to a given voxel spacing.
@@ -22,7 +22,6 @@ def interpolate(patient_id, path_to_nrrd, interpolation_type, new_spacing, retur
         Exception if an error occurs.
     """
 
-    img = sitk.ReadImage(path_to_nrrd)
     original_spacing = img.GetSpacing()
     original_size = img.GetSize()
     #print('{} {}'.format('original size: ', original_size))
@@ -51,7 +50,7 @@ def interpolate(patient_id, path_to_nrrd, interpolation_type, new_spacing, retur
     image = resample.Execute(img)
 
     if output_dir != '':
-        save_fn = output_dir + '/' + patient_id + '.' + image_format
+        save_fn = output_dir + '/' + patient_id + '.nrrd'
         writer = sitk.ImageFileWriter()
         writer.SetFileName(save_fn)
         writer.SetUseCompression(True)
