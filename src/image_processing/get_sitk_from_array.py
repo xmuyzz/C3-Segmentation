@@ -2,7 +2,7 @@ import SimpleITK as sitk
 import numpy as np
 
 
-def write_sitk_from_array_by_template(array,template_sitk,sitk_output_path):
+def write_sitk_from_array_by_template(array, template_sitk, sitk_output_path):
     
     output_spacing = template_sitk.GetSpacing()
     output_direction = template_sitk.GetDirection()

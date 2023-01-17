@@ -2,17 +2,16 @@ import os
 import operator
 import numpy as np
 import SimpleITK as sitk
-from scripts.data_util import get_arr_from_nrrd, get_bbox, generate_sitk_obj_from_npy_array
-#from scipy.ndimage import sobel, generic_gradient_magnitude
+from data_util import get_arr_from_nrrd, get_bbox, generate_sitk_obj_from_npy_array
 from scipy import ndimage
 from SimpleITK.extra import GetArrayFromImage
 from scipy import ndimage
 #import cv2
 import matplotlib as plt
-from scripts.resize_3d import resize_3d
+from resize_3d import resize_3d
     
 
-def crop_top_img_only(patient_id, img, crop_shape, return_type, output_dir, image_format):
+def crop_resize(patient_id, img, crop_shape, output_dir):
     """
     Will center the image and crop top of image after it has been registered.
     Args:
@@ -30,22 +29,16 @@ def crop_top_img_only(patient_id, img, crop_shape, return_type, output_dir, imag
         Exception if an error occurs.
     """
 
-    # get image, arr, and spacing
     img_arr = sitk.GetArrayFromImage(img)
-    img_origin = img.GetOrigin()
-    img_spacing = img.GetSpacing()
     c, y, x = img_arr.shape
     ## Get center of mass to center the crop in Y plane
     mask_arr = np.copy(img_arr) 
     mask_arr[mask_arr > -500] = 1
     mask_arr[mask_arr <= -500] = 0
     mask_arr[mask_arr >= -500] = 1 
-    #print("mask_arr min and max:", np.amin(mask_arr), np.amax(mask_arr))
     centermass = ndimage.measurements.center_of_mass(mask_arr) # z,x,y   
     cpoint = c - crop_shape[2]//2
-    #print("cpoint, ", cpoint)
     centermass = ndimage.measurements.center_of_mass(mask_arr[cpoint, :, :])   
-    #print("center of mass: ", centermass)
     startx = int(centermass[0] - crop_shape[0]//2)
     starty = int(centermass[1] - crop_shape[1]//2)      
     #startx = x//2 - crop_shape[0]//2       
@@ -53,9 +46,7 @@ def crop_top_img_only(patient_id, img, crop_shape, return_type, output_dir, imag
     startz = int(c - crop_shape[2])
     #print("start X, Y, Z: ", startx, starty, startz)
     
-    # cut bottom slices
     #image_arr = image_arr[30:, :, :]
-    #-----normalize CT data signals-------
     norm_type = 'np_clip'
     #image_arr[image_arr <= -1024] = -1024
     ## strip skull, skull UHI = ~700
@@ -92,19 +83,27 @@ def crop_top_img_only(patient_id, img, crop_shape, return_type, output_dir, imag
 #            constant_values=-1024)
 #        print("padded size: ", img_arr_crop.shape)
     #print('Returning bottom rows')
-    save_dir = output_dir + '/' + patient_id + '.' + image_format
-    img_sitk = sitk.GetImageFromArray(img_arr_crop)
-    # resize img back to 512x512
-    resize_shape = (512, 512, img_sitk.GetSize()[2])
-    img_sitk.SetSpacing(img_spacing)
-    img_sitk.SetOrigin(img_origin)
-    img_sitk = resize_3d(img_sitk, sitk.sitkLinear, resize_shape)
+
+    # get stik img for cropped img
+    crop_img = sitk.GetImageFromArray(img_arr_crop)
+    crop_img.SetSpacing(img.GetSpacing())
+    crop_img.SetOrigin(img.GetOrigin())
+    
+    # resize img back to 512x512 for segmentation model
+    resize_shape = (512, 512, crop_img.GetSize()[2])
+    resize_img = resize_3d(
+        img_nrrd=crop_img, 
+        interp_type=sitk.sitkLinear, 
+        output_size=resize_shape)
+    
     # save nrrd
-    img_sitk.SetSpacing(img_spacing)
-    img_sitk.SetOrigin(img_origin)
+    save_path = output_dir + '/' + patient_id + '.nrrd'
+    print('new spacing:', resize_img.GetSpacing())
+    resize_img.SetSpacing(resize_img.GetSpacing())
+    resize_img.SetOrigin(resize_img.GetOrigin())
     writer = sitk.ImageFileWriter()
-    writer.SetFileName(save_dir)
+    writer.SetFileName(save_path)
     writer.SetUseCompression(True)
-    writer.Execute(img_sitk)
+    writer.Execute(resize_img)
 
 

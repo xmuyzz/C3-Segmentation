@@ -1,6 +1,6 @@
 from scipy.ndimage.filters import gaussian_filter
-from scripts.densenet_regression import DenseNet
-from scripts.image_processing.image_window import apply_window
+from src.densenet_regression import DenseNet
+from src.image_processing.image_window import apply_window
 from skimage.transform import resize
 import SimpleITK as sitk
 import numpy as np 
@@ -54,16 +54,18 @@ def test_slice_selection(image_dir, model_weight_path, csv_write_path):
         predictions = model.predict(series)
         chosen_index = get_slice_number_from_prediction(predictions)
     
-        df_inter = pd.DataFrame({'patient_id':image_path.split('/')[-1].split('.')[0],
-                                'C3_Predict_slice':chosen_index,
-                                'Z_spacing':round(image_sitk.GetSpacing()[-1],5),
-                                 'XY_spacing': round(image_sitk.GetSpacing()[0],5)},index=[0])
+        df_inter = pd.DataFrame({
+            'patient_id': image_path.split('/')[-1].split('.')[0],
+            'C3_Predict_slice': chosen_index,
+            'Z_spacing': round(image_sitk.GetSpacing()[-1], 5),
+            'XY_spacing': round(image_sitk.GetSpacing()[0], 5)}, 
+            index=[0])
         #df_prediction = df_prediction.append(df_inter)
-        df_prediction = pd.concat([df_prediction,df_inter])
+        df_prediction = pd.concat([df_prediction, df_inter])
         df_prediction.to_csv(csv_write_path)
            
-        print(idx,' th image, path: ',image_path,'\n','C3_Predict_slice:',chosen_index,'\n')
-    print('C3 slice prediction is written into:',csv_write_path,'\n')
+        print(idx, 'th image, path:', image_path, '\n', 'C3_Predict_slice:', chosen_index, '\n')
+    print('C3 slice prediction is written into:', csv_write_path, '\n')
 
 
 

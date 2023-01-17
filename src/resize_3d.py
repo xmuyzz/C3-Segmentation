@@ -3,7 +3,6 @@ import SimpleITK as sitk
 
 def resize_3d(img_nrrd, interp_type, output_size):
 
-    ### calculate new spacing
 #    image = sitk.ReadImage(nrrd_image)
     image = img_nrrd
     input_size = image.GetSize()

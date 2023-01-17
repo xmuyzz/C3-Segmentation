@@ -16,7 +16,7 @@ from generators import SliceSelectionSequence
 from densenet_regression import DenseNet
 
 
-def train(proj_dir, epochs=100, name=None, batch_size=256,
+def train(proj_dir, epochs=100, name=None, batch_size=128,
           load_weights=None, gpus=1, learning_rate=0.001, threshold=10.0,
           nb_layers_per_block=4, nb_blocks=4, nb_initial_filters=16,
           growth_rate=12, compression_rate=0.5, activation='relu',
@@ -41,10 +41,10 @@ def train(proj_dir, epochs=100, name=None, batch_size=256,
     vl_labels = pd.read_csv(vl_df_path)['ZOffset'].values
     print('train shape:',tr_labels.shape,'val shape:', vl_labels.shape)
     
-    #train_jitter = 1201  # default 1000 times of image augmentation for each epoch
-    #val_jitter = 387  # default 50 times of image augmentation for each epoch
-    train_jitter = 10
-    val_jitter = 10
+    train_jitter = 1201  # default 1000 times of image augmentation for each epoch
+    val_jitter = 387  # default 50 times of image augmentation for each epoch
+    #train_jitter = 10
+    #val_jitter = 10
     train_generator = SliceSelectionSequence(
         labels=tr_labels, image_dir=tr_img_dir, batch_size=batch_size, 
         batches_per_epoch=train_jitter, jitter=True, sigmoid_scale=threshold)
@@ -125,7 +125,7 @@ def train(proj_dir, epochs=100, name=None, batch_size=256,
     loss_val = history.history['val_acc']
     epochs = range(1, 101)
     plt.plot(epochs, loss_train, 'g', label='Training accuracy')
-    plt.plot(epochs, loss_val, 'b', label='validation accuracy')
+    plt.plot(epochs, loss_val, 'b', label='Validation accuracy')
     plt.title('Training and Validation accuracy')
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')

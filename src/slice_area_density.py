@@ -1,6 +1,6 @@
 import numpy as np
 import SimpleITK as sitk
-from scripts.image_processing.image_window import get_image_path_by_id
+from src.image_processing.image_window import get_image_path_by_id
 
 
 def get_c3_slice_area(patient_id, c3_slice, seg_dir):
@@ -9,6 +9,7 @@ def get_c3_slice_area(patient_id, c3_slice, seg_dir):
     seg_path = seg_dir + '/' + patient_id + '.nrrd'
     seg_sitk =  sitk.ReadImage(seg_path)
     seg_array = sitk.GetArrayFromImage(seg_sitk)[c3_slice, :, :]
+    #print('spacing:', seg_sitk.GetSpacing()[0], seg_sitk.GetSpacing()[0])
     area_per_pixel = seg_sitk.GetSpacing()[0]*seg_sitk.GetSpacing()[1]
 
     muscle_seg = (seg_array==1)*1.0

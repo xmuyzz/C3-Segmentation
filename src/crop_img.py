@@ -7,7 +7,7 @@ from data_util import get_arr_from_nrrd, get_bbox, generate_sitk_obj_from_npy_ar
 from scipy import ndimage
 from SimpleITK.extra import GetArrayFromImage
 from scipy import ndimage
-import cv2
+###import cv2
 import matplotlib as plt
 
 

@@ -7,6 +7,8 @@ import SimpleITK as sitk
 import numpy as np
 import pandas as pd
 import os
+import glob
+
 
 
 def nrrd_to_npy(proj_dir, dataset):
@@ -83,14 +85,41 @@ def nrrd_to_npy(proj_dir, dataset):
     print(IDs)
     print(exceptions)
 
- 
+
+def np_stack(proj_dir, dataset):
+    tr_np_dir = proj_dir + '/train_data/raw_data/train_npy'
+    vl_np_dir = proj_dir + '/train_data/raw_data/val_npy'
+    ts_np_dir = proj_dir + '/train_data/raw_data/test_npy'
+    if dataset == 'train':
+        np_dir = tr_np_dir
+        save_path = proj_dir + '/train_data/raw_data/train_data.npy'
+    elif dataset == 'val':
+        np_dir = vl_np_dir
+        save_path = proj_dir + '/train_data/raw_data/val_data.npy'
+    elif dataset == 'test':
+        np_dir = ts_np_dir
+        save_path = proj_dir + '/train_data/raw_data/test_data.npy'
+
+    arr = np.empty([256, 256, 0])
+    count = 0
+    for np_path in sorted(glob.glob(np_dir + '/*npy')):
+        count += 1
+        print(count)
+        data = np.load(np_path)
+        #arr1 = np.reshape(arr1, (256, 256))
+        print(data.shape)
+        arr = np.concatenate([arr, data], axis=2)
+    print('arr shape:', arr.shape)
+    np.save(save_path, arr)
+
+
 if __name__ == '__main__':
 
     proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/data'
-    dataset = 'test'
+    dataset = 'train'
 
-    nrrd_to_npy(proj_dir, dataset)
-
+    #nrrd_to_npy(proj_dir, dataset)
+    np_stack(proj_dir, dataset)
 
 
 

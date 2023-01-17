@@ -1,9 +1,9 @@
 import os
 import SimpleITK as sitk
 import numpy as np
-from scripts.unet import get_unet_2D
-from scripts.image_processing.image_window import get_image_path_by_id, remove_arm_area
-from scripts.image_processing.get_sitk_from_array import write_sitk_from_array_by_template
+from src.unet import get_unet_2D
+from src.image_processing.image_window import get_image_path_by_id, remove_arm_area
+from src.image_processing.get_sitk_from_array import write_sitk_from_array_by_template
 import matplotlib.pyplot as plt
 import pandas as pd
 
