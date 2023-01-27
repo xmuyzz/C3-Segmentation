@@ -42,11 +42,6 @@ def get_CSA(proj_dir):
     print('bad data:', IDs, errors)
 
 
-def CSA_review():
-    df = pd.read_csv(proj_dir + '/inference/clinical/C3_CSA.csv')
-    df0 = pd.read_csv(proj_dir + '/visualize/patient_list.csv')
-    df = df0.merge(df, on
-
 
 if __name__ == '__main__':
 

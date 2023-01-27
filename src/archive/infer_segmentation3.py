@@ -15,21 +15,27 @@ def test_segmentation(image_dir, model_weight_path, l3_slice_csv_path, output_di
             decompression_channels=[256, 128, 64, 32, 16]   )
     model.load_weights(model_weight_path)
     
-    df_prediction_l3 = pd.read_csv(l3_slice_csv_path, index_col=0)
+    #df_prediction_l3 = pd.read_csv(l3_slice_csv_path, index_col=0)
+    #df = pd.read_csv(l3_slice_csv_path, index_col=0)
+    df = pd.read_csv(l3_slice_csv_path)
+    print(df)
     ids = []
-    for idx in range(df_prediction_l3.shape[0]):    
-        patient_id = str(df_prediction_l3.iloc[idx, 0])
+    #for idx in range(df_prediction_l3.shape[0]):    
+    for patient_id, c3_slice in zip(df['ID'], df['C3_Manual_slice']):
+        #patient_id = str(df_prediction_l3.iloc[idx, 0])
         print('pat id:', patient_id)
         #infer_3d_path = output_dir + patient_id + '.seg.nrrd'
         infer_3d_path = output_dir + '/' + patient_id + '.nrrd'
         print(infer_3d_path)
-        image_path = get_image_path_by_id(patient_id, image_dir)
+        #image_path = get_image_path_by_id(patient_id, image_dir)
+        image_path = image_dir + '/' + patient_id + '.nrrd'
         try:
             image_sitk = sitk.ReadImage(image_path)
             #image_sitk = resample_sitk_image(image_sitk1, new_spacing=[1, 1, 3],new_size= None, interpolator=sitk.sitkLinear)
             image_array_3d = sitk.GetArrayFromImage(image_sitk)
             im_xy_size = image_array_3d.shape[1]
-            l3_slice_auto = int(df_prediction_l3.iloc[idx, 1])
+            #l3_slice_auto = int(df_prediction_l3.iloc[idx, 1])
+            l3_slice_auto = int(c3_slice)
             #print("c3 slice")
             print('slice #:', l3_slice_auto)
             image_array = sitk.GetArrayFromImage(image_sitk)[l3_slice_auto, :, :].reshape(1, 512, 512, 1) 

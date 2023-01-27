@@ -1,15 +1,10 @@
-#from google.colab import drive
-#drive.mount('/content/drive')
 import glob, os, functools
 import numpy as np
 import pandas as pd
 import SimpleITK as sitk
-import operator
 from scipy import ndimage
 from SimpleITK.extra import GetArrayFromImage
-from scipy import ndimage
 import shutil
-import matplotlib as plt
 from interpolate import interpolate
 from crop_img import crop_top, crop_top_img_only, crop_full_body
 

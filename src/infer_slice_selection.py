@@ -35,7 +35,7 @@ def test_slice_selection(image_dir, model_weight_path, csv_write_path):
     model = DenseNet(img_dim=(256, 256, 1), 
                 nb_layers_per_block=4, nb_dense_block=4, growth_rate=12, nb_initial_filters=16, 
                 compression_rate=0.5, sigmoid_output_activation=True, 
-                activation_type='relu', initializer='glorot_uniform', output_dimension=1, batch_norm=True )
+                activation_type='relu', initializer='glorot_uniform', output_dimension=1, batch_norm=True)
     model.load_weights(model_weight_path)
     print('\n','\n','\n','loaded:' ,model_weight_path)  
     
@@ -44,7 +44,7 @@ def test_slice_selection(image_dir, model_weight_path, csv_write_path):
     
     for idx, image_path in enumerate(images):
         image_sitk = sitk.ReadImage(image_path)    
-        image_array  = sitk.GetArrayFromImage(image_sitk)
+        image_array = sitk.GetArrayFromImage(image_sitk)
         windowed_images = apply_window(image_array)
         
         resize_func = functools.partial(resize, output_shape=model.input_shape[1:3],

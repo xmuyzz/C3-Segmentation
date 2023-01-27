@@ -37,18 +37,18 @@ def get_image_path_by_id(patient_id, image_dir):
 
 
 def remove_arm_area(ct_array_2d):
-    bw_img= ct_array_2d>-250
-    labeled_img , num = label(bw_img,connectivity=2,background=0,return_num=True)
+    bw_img = ct_array_2d>-250
+    labeled_img , num = label(bw_img, connectivity=2, background=0, return_num=True)
     max_label = 0
     max_num = 0
     
-    for i in range(1,num+1):
-        if np.sum(labeled_img ==i) > max_num:
+    for i in range(1, num+1):
+        if np.sum(labeled_img==i) > max_num:
             max_num = np.sum(labeled_img ==i)
             max_label = i
     biggest_area = (labeled_img==max_label)
     
-    biggest_area_closed= morphology.remove_small_holes(biggest_area, area_threshold=10000, connectivity=2)
+    biggest_area_closed = morphology.remove_small_holes(biggest_area, area_threshold=10000, connectivity=2)
     biggest_area_closed_dilated = morphology.dilation(biggest_area_closed, square(8))
     return biggest_area_closed_dilated
 

@@ -101,9 +101,32 @@ def clinical():
     df.to_csv(proj_dir + '/clinical/HN_C3_TOT.csv', index=False)
 
 
+def exclusion():
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'
+    df0 = pd.read_csv(proj_dir + '/clinical/HN_C3_TOT.csv', encoding='unicode_escape')
+    df1 = pd.read_csv(proj_dir + '/visualize/patient_list_review_sum.csv', encoding='unicode_escape')
+    excludes = []
+    pmrns = []
+    for ID, comment in zip(df1['ID'], df1['exclusion']):
+        pmrn = int(ID.split('_')[1])
+        pmrns.append(pmrn)
+        if comment in ['postop', 'incomplete scan', 'artifact', 'skin fold']:
+            exclude = 'yes'
+        else:
+            exclude = 'no'
+        excludes.append(exclude)
+    exclusions = df1['exclusion'].to_list()
+    df2 = pd.DataFrame({'PMRN': pmrns, 'Exclude': excludes, 'Comments': exclusions})
+    print(df2)
+    print(excludes)
+    print(exclusions)
+    df = df0.merge(df2, how='left', on='PMRN')
+    df.to_csv(proj_dir + '/clinical/HN_C3_TOT_new.csv', index=False)
+
 if __name__ == '__main__':
 
-    clinical()
+    #clinical()
+    exclusion()
 
 
 

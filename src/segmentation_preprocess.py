@@ -80,6 +80,10 @@ def main():
     
     preprocess2(img_dirs, output_dir)
 
+def main2():
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/internal_test'
+    img_dir = proj_dir + '/test_img'
+    seg_dir = proj_dir + '/test_seg'
 
 if __name__ == '__main__':
 
