@@ -5,6 +5,7 @@ import shutil
 #import pydicom as dicom
 import pandas as pd
 import SimpleITK as sitk
+import zipfile
 
 def get_slice():
     
@@ -94,27 +95,65 @@ def nii_to_nrrd():
             writer.Execute(seg)
 
 def rename():
-    proj_dir = /mnt/kannlab_rfa/Zezhong/c3_segmentation/internal_test'
+    #proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/internal_test'
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/validation'
     img_dir = proj_dir + '/yash_img'
-    seg_dir = proj_dir + '/yash_seg'
-    for i, img_path in enumerate(img_dir):
-        ID = img_dir.split('_')[1].split('-')[2]
+    for i, img_path in enumerate(glob.glob(img_dir + '/*nrrd')):
+        ID = 'MDA' + img_path.split('/')[-1].split('_')[1].split('-')[2]
         print(i, ID)
         save_path = img_dir + '/' + ID + '.nrrd'
+        #print(save_path)
         os.rename(img_path, save_path)
-    for i, seg_path in enumerate(seg_dir):
-        ID = seg_dir.split('_')[1].split('-')[2]
+
+def unzip():
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/validation'
+    zip_path = proj_dir + '/MDACC-validation-preprocessed-files-img.zip'
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+     zip_ref.extractall(proj_dir)
+
+
+def name():
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/validation/clinical'
+    df = pd.read_csv(proj_dir + '/sum.csv')
+    IDs = []
+    for pat_id in df['pat_id']:
+        ID = 'MDA' + pat_id.split('_')[1].split('-')[2]      
+        print(ID)
+        IDs.append(ID)
+    df['ID'] = IDs
+    df.to_csv(proj_dir + '/sum.csv', index=False)
+
+
+def add_spacing():
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'
+    img_dir = proj_dir + '/data/mdacc_data/raw_img'
+    df = pd.read_csv(proj_dir + '/papers/results/val.csv')
+    IDs = []
+    z_spacings = []
+    xy_spacings = []
+    for i, pat_id in enumerate(df['patient_id']):
+        ID = 'MDA' + pat_id.split('_')[1].split('-')[2]
         print(i, ID)
-        save_path = seg_dir + '/' + ID + '.nrrd'
-        os.rename(seg_path, save_path)
-        
+        IDs.append(ID)
+        img_path = img_dir + '/' + ID + '.nrrd'
+        img = sitk.ReadImage(img_path)
+        xy_spacing = img.GetSpacing()[0]
+        z_spacing = img.GetSpacing()[2]
+        xy_spacings.append(xy_spacing)
+        z_spacings.append(z_spacing)
+    df['ID'], df['xy_spacing'], df['z_spacing'] = [IDs, xy_spacings, z_spacings]
+    df.to_csv(proj_dir + '/papers/results/val.csv', index=False)
+
+
 if __name__ == '__main__':
     #get_slice()
     #move_file()
     #get_names()
     #get_test_data()
     #nii_to_nrrd()
-    rename()
+    #name()
+    #unzip()
+    add_spacing()
 
 
 

@@ -5,42 +5,60 @@ import numpy as np
 from src.slice_area_density import get_c3_slice_area, get_c3_slice_density
 
 
-def get_CSA(proj_dir):
+def get_CSA():
     """get C3 muscle area and density
     """
-    img_dir = proj_dir + '/c3_segmentation/inference/crop_resize_img'
-    seg_dir = proj_dir + '/c3_segmentation/inference/pred_new'
-    df = pd.read_csv(proj_dir + '/c3_segmentation/inference/files/C3_top_slice_pred.csv')
-    df0 = pd.DataFrame()
-    IDs = []
-    errors = []
+    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'
+    #img_dir = proj_dir + '/internal_test/prepro_img'
+    #seg_dir = proj_dir + '/internal_test/prepro_seg'
+    #pred_dir = proj_dir + '/internal_test/segmentation_model/preds'
+    #pred_dir = proj_dir + '/internal_test/pred_seg'
+    img_dir = proj_dir + '/internal_test/yash_img'
+    seg_dir = proj_dir + '/internal_test/yash_seg'
+    #pred_dir = proj_dir + '/internal_test/segmentation_model/preds'
+    pred_dir = proj_dir + '/internal_test/yash_pred'
+    csv_path = proj_dir + '/internal_test/clinical_data/sum.csv'
+    df = pd.read_csv(csv_path)
+    pred_csas = []
+    pred_csds = []
+    seg_csas = []
+    seg_csds = []
+    pred_voxels = []
+    seg_voxels = []
     count = 0
-    for ID, c3_slice in zip(df['patient_id'], df['C3_Predict_slice']):
+    for ID, pred_slice, seg_slice in zip(df['ID'], df['pred_slice'], df['seg_slice']):
         count += 1
-        try:
-            CSA, sfat_area, vfat_area = get_c3_slice_area(
-                patient_id=str(ID),
-                c3_slice=c3_slice,
-                seg_dir=seg_dir)
-            CSD, sfat_density, vfat_density = get_c3_slice_density(
-                patient_id=str(ID),
-                c3_slice=c3_slice,
-                seg_dir=seg_dir,
-                img_dir=img_dir)
-            print(count, ID, round(CSA, 2))
-            df1 = pd.DataFrame({
-                'patient_id': ID,
-                'muscle_auto_segmentation_area': round(CSA, 2),
-                'muscle_auto_edensity': round(CSD, 2)
-                }, index=[0])
-            df0 = df0.append(df1)
-            df0.to_csv(proj_dir + '/c3_segmentation/clinical/C3_CSA.csv')
-        except Exception as e:
-            print(ID, e)
-            IDs.append(ID)
-            errors.append(e)
-    print('bad data:', IDs, errors)
-
+        ID = str(ID)
+        # prediction CSA
+        csa, csd, tot_voxel = get_c3_slice_area(
+            patient_id=ID,
+            c3_slice=pred_slice,
+            img_dir=img_dir,
+            seg_dir=pred_dir)
+        pred_csa = round(csa, 2)
+        pred_csd = round(csd, 2)
+        pred_voxel = tot_voxel
+        pred_csas.append(pred_csa)
+        pred_csds.append(pred_csd)
+        pred_voxels.append(pred_voxel)
+        # segmentation CSA
+        csa, csd, tot_voxel = get_c3_slice_area(
+            patient_id=ID,
+            c3_slice=seg_slice,
+            img_dir=img_dir,
+            seg_dir=seg_dir)
+        seg_csa = round(csa, 2)
+        seg_csd = round(csd, 2)
+        seg_voxel = tot_voxel
+        seg_csas.append(seg_csa)
+        seg_csds.append(seg_csd)
+        seg_voxels.append(seg_voxel)
+        #print(count, ID, seg_csa, pred_csa, seg_csd, pred_csd)
+        print(count, ID, seg_csa, seg_voxel, pred_csa, pred_voxel)
+    #df['seg_csa'], df['pred_csa'], df['seg_csd'], df['pred_csd'] = [seg_csas, pred_csas, seg_csds, pred_csds]
+    df['seg_csa'], df['pred_csa'], df['seg_voxel'], df['pred_voxel'] = [seg_csas, pred_csas, seg_voxels, pred_voxels]
+    save_path = proj_dir + '/internal_test/clinical_data/sum_yash.csv'
+    df.to_csv(save_path, index=False)
 
 
 if __name__ == '__main__':

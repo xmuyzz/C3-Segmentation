@@ -11,49 +11,14 @@ import shutil
 
 
 def draw_contour():
-    """get segmentation and image fusion in JPG format
-    """
-    proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation/visualize'
-    if not os.path.exists(proj_dir + '/C3_contour'):
-        os.makedirs(proj_dir + '/C3_contour')
-    img_paths = [i for i in sorted(glob.glob(proj_dir + '/img/*nrrd'))]
-    seg_paths = [i for i in sorted(glob.glob(proj_dir + '/seg/*nrrd'))]
-    count = 0
-    IDs = []
-    for img_path, seg_path in zip(img_paths, seg_paths):
-        ID = img_path.split('/')[-1].split('.')[0]
-        count += 1
-        print(count, ID)
-        IDs.append(ID)
-        nrrd_img = sitk.ReadImage(img_path)
-        arr_img = sitk.GetArrayFromImage(nrrd_img)
-        nrrd_seg = sitk.ReadImage(seg_path)
-        arr_seg = sitk.GetArrayFromImage(nrrd_seg)
-        # generate contour with CV2
-        img = np.uint8(arr_img*255)
-        seg = np.uint8(arr_seg*255)
-        contour, hierarchy = cv2.findContours(seg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        main = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        cv2.drawContours(
-            image=main, 
-            contours=contour, 
-            contourIdx=-1, 
-            color=(0, 0, 255), 
-            thickness=1,
-            lineType=16)
-        cv2.imwrite(proj_dir + '/C3_contour/' + ID + '.png', main) 
-    df = pd.DataFrame({'ID': IDs})
-    df.to_csv(proj_dir + '/patient_list.csv', index=False)
-
-
-def save_contour():
     proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'
-    csv_path = proj_dir + '/inference/files/C3_top_slice_pred.csv'
+    csv_path = proj_dir + '/inference/clinical_files/C3_top_slice_pred.csv'
     #img_dir = proj_dir + '/inference/img'
     #seg_dir = proj_dir + '/inference/pred'
     img_dir = proj_dir + '/inference/crop_resize_img'
     seg_dir = proj_dir + '/inference/pred_new'
-    save_dir = proj_dir + '/visualize/C3_contour'
+    #save_dir = proj_dir + '/visualize/C3_contour'
+    save_dir = proj_dir + '/papers/inference_contour'
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     df = pd.read_csv(csv_path)
@@ -61,9 +26,9 @@ def save_contour():
     bad_data = []
     IDs = []
     errors = []
-    for ID, Slice in zip(df['patient_id'], df['C3_Predict_slice']):
+    for ID, Slice in zip(df['ID'], df['pred_slice']):
         #if ID in ['10091115443', '10029404836', '10023848707']:
-        if ID:
+        if str(ID) in ['10034201979']:
             count += 1
             print(count, ID)
             IDs.append(ID)
@@ -91,8 +56,8 @@ def save_contour():
                     image=main,
                     contours=contour,
                     contourIdx=-1,
-                    color=(0, 0, 255),
-                    thickness=1,
+                    color=(255, 0, 0),
+                    thickness=2,
                     lineType=16)
                 cv2.imwrite(save_path, main)
             except Exception as e:
@@ -213,9 +178,8 @@ def rename_cases():
 if __name__ == '__main__':
 
     #save_img_slice()
-    #draw_contour()
-    #save_contour()
-    get_subset()
+    draw_contour()
+    #get_subset()
     #rename_cases()
 
 

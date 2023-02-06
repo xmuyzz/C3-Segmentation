@@ -8,10 +8,12 @@ from src.slice_area_density import get_c3_slice_area
 
 def get_dice():
     proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'
-    img_dir = proj_dir + '/internal_test/prepro_img'
-    seg_dir = proj_dir + '/internal_test/prepro_seg'
-    #pred_dir = proj_dir + '/internal_test/segmentation_model/preds'
-    pred_dir = proj_dir + '/internal_test/pred_seg'
+    #img_dir = proj_dir + '/internal_test/prepro_img'
+    #seg_dir = proj_dir + '/internal_test/prepro_seg'
+    #pred_dir = proj_dir + '/internal_test/pred_seg'
+    img_dir = proj_dir + '/internal_test/yash_img'
+    seg_dir = proj_dir + '/internal_test/yash_seg'
+    pred_dir = proj_dir + '/internal_test/yash_pred'
     slice_csv_path = proj_dir + '/internal_test/slice_model/slice_tot.csv'
     inters = []
     sums = []
@@ -29,15 +31,19 @@ def get_dice():
         seg = seg[seg_slice, :, :]
         #pred = np.where(pred != 0.0, 1, 0)
         #seg = np.where(seg != 0.0, 1, 0)
+        dice = (2*np.sum(seg*pred)) / (np.sum(seg) + np.sum(pred))
+        print(round(dice, 3))
+        #pred = np.where(pred != 0.0, 1, 0)
+        #seg = np.where(seg != 0.0, 1, 0)
         assert pred.shape == seg.shape, print('different shape')
         pred = pred.astype(bool)
         seg = seg.astype(bool)
         volume_sum = seg.sum() + pred.sum()
         volume_intersect = (seg & pred).sum()
         volume_union = volume_sum - volume_intersect
-        dice = 2*volume_intersect / volume_sum
-        dice = round(dice, 3)
-        print(ID, dice)
+        #dice = 2*volume_intersect / volume_sum
+        #dice = round(dice, 3)
+        #print(ID, dice)
         inters.append(volume_intersect)
         sums.append(volume_sum)
         unions.append(volume_union)
@@ -50,17 +56,21 @@ def get_dice():
     print('aggregated dice score:', dsc_agg)
     print('aggregated jaccard score:', jaccard_agg)
     df['dice'] = dices
-    df.to_csv(proj_dir + '/internal_test/slice_model/slice_tot.csv')
+    df.to_csv(proj_dir + '/internal_test/slice_model/slice_yash.csv')
 
 
 def get_CSA():
     """get C3 muscle area and density
     """
     proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'
-    img_dir = proj_dir + '/internal_test/prepro_img'
-    seg_dir = proj_dir + '/internal_test/prepro_seg'
+    #img_dir = proj_dir + '/internal_test/prepro_img'
+    #seg_dir = proj_dir + '/internal_test/prepro_seg'
     #pred_dir = proj_dir + '/internal_test/segmentation_model/preds'
-    pred_dir = proj_dir + '/internal_test/pred_seg'
+    #pred_dir = proj_dir + '/internal_test/pred_seg'
+    img_dir = proj_dir + '/internal_test/yash_img'
+    seg_dir = proj_dir + '/internal_test/yash_seg'
+    #pred_dir = proj_dir + '/internal_test/segmentation_model/preds'
+    pred_dir = proj_dir + '/internal_test/yash_pred'
     csv_path = proj_dir + '/internal_test/clinical_data/sum.csv'
     df = pd.read_csv(csv_path)
     pred_csas = []
@@ -101,14 +111,14 @@ def get_CSA():
         print(count, ID, seg_csa, seg_voxel, pred_csa, pred_voxel)
     #df['seg_csa'], df['pred_csa'], df['seg_csd'], df['pred_csd'] = [seg_csas, pred_csas, seg_csds, pred_csds]
     df['seg_csa'], df['pred_csa'], df['seg_voxel'], df['pred_voxel'] = [seg_csas, pred_csas, seg_voxels, pred_voxels]
-    save_path = proj_dir + '/internal_test/clinical_data/sum.csv'
+    save_path = proj_dir + '/internal_test/clinical_data/sum_yash.csv'
     df.to_csv(save_path, index=False)
 
 
 if __name__ == '__main__':
 
-    #get_dice()
-    get_CSA()
+    get_dice()
+    #get_CSA()
 
 
 

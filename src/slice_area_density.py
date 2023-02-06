@@ -8,9 +8,9 @@ def get_c3_slice_area(patient_id, c3_slice, img_dir, seg_dir):
     img_path = img_dir + '/' + patient_id + '.nrrd'
     img_sitk = sitk.ReadImage(img_path)
     img_arr = sitk.GetArrayFromImage(img_sitk)[c3_slice, :, :]
-    img_arr = np.clip(img_arr, a_min=-175, a_max=275)
-    max, min = img_arr.max(), img_arr.min()
-    img_arr = (img_arr - min) / (max - min)
+    #img_arr = np.clip(img_arr, a_min=-175, a_max=275)
+    #max, min = img_arr.max(), img_arr.min()
+    #img_arr = (img_arr - min) / (max - min)
 
     seg_path = seg_dir + '/' + patient_id + '.nrrd'
     seg_sitk =  sitk.ReadImage(seg_path)
