@@ -73,9 +73,9 @@ def clinical():
     print('case number:', df.shape[0])
     df.to_csv(proj_dir + '/clinical/C3_test.csv', index=False)
 
-    # ---get lumbar3 CSA and L3 SMI---
-    L3_SMIs = []
-    L3_CSAs = []
+    # ---get C3 CSA and C3 SMI---
+    C3_SMIs = []
+    C3_CSAs = []
     bad_data = []
     errors = []
     for i in range(df.shape[0]):
@@ -92,12 +92,12 @@ def clinical():
         else:
             print('input wrong gender info!')
         # CSA (cm2), age (years), weight (kg)
-        L3_CSA = 27.304 + CSA*1.363 - age*0.671 + weight*0.640 + sex*26.422
-        L3_SMI = L3_CSA/(height**2)
-        L3_CSAs.append(L3_CSA)
-        L3_SMIs.append(L3_SMI)
-    df['L3_CSA'] = L3_CSAs
-    df['L3_SMI'] = L3_SMIs
+        C3_CSA = 27.304 + CSA*1.363 - age*0.671 + weight*0.640 + sex*26.422
+        C3_SMI = L3_CSA/(height**2)
+        C3_CSAs.append(L3_CSA)
+        C3_SMIs.append(L3_SMI)
+    df['C3_CSA'] = C3_CSAs
+    df['C3_SMI'] = C3_SMIs
     df.to_csv(proj_dir + '/clinical/HN_C3_TOT.csv', index=False)
 
 
