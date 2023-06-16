@@ -12,21 +12,34 @@ Model Weights are available for download at the following link.
 https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=drive_link
 
 ### Steps before you execute the Scripts listed 
+
 1. Download the model weights from the google drive link provided above, unzip the files, and save them in the 'model' subfolder. Please note that the CV folder within the zip file contains five-fold cross-validation sub-models for segmentation.
-2. Make sure files the files input
+
+2. Make sure the input files are stored in the following folder
    Raw scans - /data/raw/
+
+   Suggested directories for storing the data processed in the scripts:
    Pre-processed Scans - /data/preprocessed
-3. Before executing each script, edit it to point to the appropriate input/output directories.
+   Slice Selection Output CSV - /data/test/output_scv
+   Segmentation Model Output - /data/test/output_segmentation 
+  
+3. Before executing each script, edit the script to point to the correct input/output directories.
    
 
 ### Scripts Execution Sequence
 
-1. 'Preprocess_files_for_testing.py'
-2. 'Test_slice_selection.py'
-3. 'Test_segmentation.py'
+1. 'src/Preprocess_test_data.py'
+
+2. 'Test_slice_model.py'
+
+3. 'Test_segmentation_model.py'
+
 4. 'get_dice.py'
+
 5. 'statistics.py'
+
 6. 'visualize.py'
+
 7. 'clinical.py'
 
 1. `main.py`  
