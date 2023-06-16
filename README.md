@@ -1,26 +1,45 @@
 # C3-Segmentation
 
-Code base for auto segmenting the skeletal muscle mass from 3D CT images
+Codebase for auto-segmenting the C3 skeletal muscle mass from 3D CT images.
 
-Consists of two deep-learning models: Slice Selection Model and Segmentation Model
+Consists of two deep-learning models: Slice Selection Model and Segmentation Model. The Slice Selection Model is adapted from DenseNet and the Segmentation model is adapted from UNet.
 
-Slice Selection Model is adpated from DenseNet and Segmentation model is adapted from UNet
 
-C3 auto-segmentation for muscle cross section area
+### Trained Model Weights 
+
+Model Weights are available for download at the following link.
+
+https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=drive_link
+
+### Steps before you execute the Scripts listed 
+1. Download the model weights from the google drive link provided above, unzip the files, and save them in the 'model' subfolder. Please note that the CV folder within the zip file contains five-fold cross-validation sub-models for segmentation.
+2. Make sure files the files input
+   Raw scans - /data/raw/
+   Pre-processed Scans - /data/preprocessed
+3. Before executing each script, edit it to point to the appropriate input/output directories.
+   
 
 ### Scripts Execution Sequence
 
+1. 'Preprocess_files_for_testing.py'
+2. 'Test_slice_selection.py'
+3. 'Test_segmentation.py'
+4. 'get_dice.py'
+5. 'statistics.py'
+6. 'visualize.py'
+7. 'clinical.py'
+
 1. `main.py`  
-     Step 1: Executes Slice Slection Model first to select the C3 slice from the raw CT scan file provided as input. (No pre-processing of the raw scans are needed for this step) 
+     Step 1: Execute Slice Selection Model first to select the C3 slice from the raw CT scan file provided as input. (No pre-processing of the raw scans are needed for this step) 
      - Input_1: Data folder raw CT scans under the folder of '../data/'
-     - Input_2: model folder cantaining the model weights '../model/'
-     - Out_put: output_scv.csv containing predicted C3 slice number for each of the CT scans in input folder.
+     - Input_2: a model folder containing the model weights '../model/'
+     - Out_put: output_scv.csv containing predicted C3 slice number for each of the CT scans in the input folder.
      - [Further details](..d)
 
-     Step 2: Executes Segmenation Model to produced predicted mask file from selectd C3 slide. (Data needs to be pre-processed. The preprocessing steps consist of scaling to pixel width 1, cropping the image with 256x256x1 and then resized) 
+     Step 2: Executes Segmentation Model to produce predicted mask file from selected C3 slide. (Data needs to be pre-processed. The preprocessing steps consist of scaling to pixel width 1, cropping the image with 256x256x1, and then resizing) 
      - Input_1: Data folder raw CT scans under the folder of '../data/'
-     - Input_2: model folder cantaining the model weights '../model/'
-     - Out_put: Segmention masks in the output folder '../data/test/output_segmentation
+     - Input_2: a model folder containing the model weights '../model/'
+     - Out_put: Segmentation masks in the output folder '../data/test/output_segmentation
      - [Further details](..d)
 
 2. `main.py`  
