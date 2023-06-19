@@ -36,30 +36,22 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
       - Input: Data folder raw CT scans under the folder of '../data/raw_img'
       - Out_put: Preprocessed files in the folder '..data/prepro_img'
     
-3. 'Test_slice_model.py'
+2. 'Test_slice_model.py'
 
-4. 'Test_segmentation_model.py'
+      Set the proj_dir, raw_img_dir, model_path, and slice_csv_path directories before executing the code. 
+      This script tests the slice selection model which predicts C3 slice for each raw_scan given as input. Please note that input files are raw CT scans. 
+	   - Input Scans: nrrd files
+      - Model: C3_Top_Selection_Model_Weight.hdf5 
+ 	   - Output: C3_Top_Slice_Prediction.csv' 
 
-5. 'get_dice.py'
 
-6. 'statistics.py'
+3. 'Test_segmentation_model.py'
 
-7. 'visualize.py'
+4. 'get_dice.py'
 
-8. 'clinical.py'
+5. 'statistics.py'
 
-1. `main.py`  
-     Step 1: Execute Slice Selection Model first to select the C3 slice from the raw CT scan file provided as input. (No pre-processing of the raw scans are needed for this step) 
-     - Input_1: Data folder raw CT scans under the folder of '../data/'
-     - Input_2: a model folder containing the model weights '../model/'
-     - Out_put: output_scv.csv containing predicted C3 slice number for each of the CT scans in the input folder.
-     - [Further details](..d)
+6. 'visualize.py'
 
-     Step 2: Executes Segmentation Model to produce predicted mask file from selected C3 slide. (Data needs to be pre-processed. The preprocessing steps consist of scaling to pixel width 1, cropping the image with 256x256x1, and then resizing) 
-     - Input_1: Data folder raw CT scans under the folder of '../data/'
-     - Input_2: a model folder containing the model weights '../model/'
-     - Out_put: Segmentation masks in the output folder '../data/test/output_segmentation
-     - [Further details](..d)
+7. 'clinical.py'
 
-2. `main.py`  
- 
