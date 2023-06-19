@@ -1,6 +1,6 @@
 # C3-Segmentation
 
-The codebase for auto-segmenting the C3 skeletal muscle mass, muscle cross-sectional area (CSA), and Skeletal Mass Index (SMI) from 3D CT images.
+The codebase for auto-segmenting the C3 skeletal muscle mass and for calculating muscle cross-sectional area (CSA), and Skeletal Mass Index (SMI) from 3D CT images.
 
 Consists of two deep-learning models: Slice Selection Model and Segmentation Model. The Slice Selection Model is adapted from DenseNet and the Segmentation model is adapted from UNet.
 
@@ -24,7 +24,7 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
    Slice Selection Output CSV - /data/test/output_scv
    Segmentation Model Output - /data/test/output_segmentation 
   
-3. Before executing each script, edit the script to point to the correct input/output directories.
+3. Before executing each script, edit the script to update the correct input/output directories.
    
 
 ### Scripts Execution Sequence
