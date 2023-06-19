@@ -16,6 +16,7 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 1. Download the model weights from the google drive link provided above, unzip the files, and save them in the 'model' subfolder. Please note that the CV folder within the zip file contains five-fold cross-validation sub-models for segmentation.
 
 2. Make sure the input files are stored in the following folder
+
    Raw scans - /data/raw/
 
    Suggested directories for storing the data processed in the scripts:
