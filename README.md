@@ -36,7 +36,7 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
       - Input: Data folder raw CT scans under the folder of '../data/raw_img'
       - Out_put: Preprocessed files in the folder '..data/prepro_img'
     
-2. 'Test_slice_model.py'
+2. 'test_slice_model.py'
 
       Set the proj_dir, raw_img_dir, model_path, and slice_csv_path directories before executing the code. 
       This script tests the slice selection model which predicts C3 slice for each raw_scan given as input. Please note that input files are raw CT scans. 
@@ -45,7 +45,7 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
  	   - Output: C3_Top_Slice_Prediction.csv' 
 
 
-3. 'Test_segmentation_model.py'
+3. 'test_segmentation_model.py'
 
 4. 'get_dice.py'
 
