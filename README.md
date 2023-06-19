@@ -40,18 +40,26 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 
       Set the proj_dir, raw_img_dir, model_path, and slice_csv_path directories before executing the code. 
       This script tests the slice selection model which predicts C3 slice for each raw_scan given as input. Please note that input files are raw CT scans. 
-	   - Input Scans: nrrd files
+      - Input Scans: nrrd files
       - Model: C3_Top_Selection_Model_Weight.hdf5 
- 	   - Output: C3_Top_Slice_Prediction.csv' 
+      - Output: C3_Top_Slice_Prediction.csv' 
 
 
 3. 'test_segmentation_model.py'
 
-4. 'get_dice.py'
+   	Set the proj_dir, raw_img_dir, model_path, slice_csv_path, and output_dir directories before executing the code. 
+	This script generates the segmentation masks for the selected C3 slice for each raw_scan given as input.
+   	- Input Scans: nrrd files
+ 	- Model: C3_Top_Segmentation_Model_Weight.hdf5 
+ 	- Input: C3_Top_Slice_Prediction.csv
+ 	- Output: Segmentation masks in output_dir
 
-5. 'statistics.py'
 
-6. 'visualize.py'
+5. 'get_dice.py'
 
-7. 'clinical.py'
+6. 'statistics.py'
+
+7. 'visualize.py'
+
+8. 'clinical.py'
 
