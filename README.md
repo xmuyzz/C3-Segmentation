@@ -59,7 +59,7 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 
    	Set the proj_dir, raw_img_dir, raw_seg_dir, Slice Prediction CSV, and output_dir directories before executing the code. 
 	This script generates the Dice scores for auto-segmentation masks when manual segmentations of test data are available.
-   	- Input#1 : Auto segmentation files
+   	- Input#1: Auto segmentation files
  	- Input#2: Manual segmentation files of test data
  	- Input#3: C3_Top_Slice_Prediction.csv
  	- Output: DICE Scores of test data in a CSV file
@@ -68,7 +68,7 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 
   	Set the proj_dir, raw_img_dir, raw_seg_dir, Slice Prediction CSV, and output_dir directories before executing the code. 
 	This script generates the Cross-Sectional Area (CSA) of the C3 Skeletal Muscle Mass from the auto-segmented masks.
-   	- Input#1 : Auto segmentation files
+   	- Input#1: Auto segmentation files
  	- Input#2: Manual segmentation files of test data
  	- Input#3: C3_Top_Slice_Prediction.csv
  	- Output: CSA in a CSV file
@@ -87,17 +87,16 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 
 	Set the proj_dir, raw_img_dir, raw_seg_dir, Slice Prediction CSV, and output_dir directories before executing the code. 
 	This script generates the masks with contours for easy visualization. 
-   	- Input#1 : Auto segmentation files
- 	- Input#2: Manual segmentation files of test data
+   	- Input#1: Auto segmentation files
  	- Input#3: C3_Top_Slice_Prediction.csv
- 	- Output: CSA in a CSV file
-
+ 	- Output: Segmentation files with contours for visualizing the masks
 
 8. 'clinical.py'
 
-	Set the proj_dir, raw_img_dir, raw_seg_dir, Slice Prediction CSV, and output_dir directories before executing the code. 
+	Set the proj_dir, raw_img_dir, raw_seg_dir, Slice Prediction CSV, Clinical Meta-data files and output_dir directories before executing the code. 
 	This script generates the C3 Skeletal Muscle Index (SMI) and translates that to the corresponding L3 Skeletal Muscle Index (SMI).
-   	- Input#1 : Auto segmentation files
- 	- Input#2: Manual segmentation files of test data
+   	- Input#1: Auto segmentation files
+ 	- Input#2: Cross-Sectional Area CSV file
  	- Input#3: C3_Top_Slice_Prediction.csv
- 	- Output: CSA in a CSV file
+ 	- Input#4: Patient Clinical meta information in a CSV file
+	- Output: SMI data in a CSV file
