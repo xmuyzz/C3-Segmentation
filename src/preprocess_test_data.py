@@ -9,6 +9,8 @@ from interpolate import interpolate
 from crop_img import crop_top, crop_top_img_only, crop_full_body
 from resize_3d import resize_3d
 
+### Set the proj_dir, img_dir, and seg_dir folder paths in the main function
+### The script preprocess the raw scans, the steps involve respacing the files to 1x1, cropping by 256x256, and resizing to 512x512 along XY planes
 
 def respace_crop_resize(img_dir, seg_dir, save_img_dir, save_seg_dir):
     count = 0
