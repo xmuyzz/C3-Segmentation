@@ -6,10 +6,12 @@ import SimpleITK as sitk
 import numpy as np
 from src.infer_slice_selection import test_slice_selection
 
+# Test the slice selection model that predicts C3 slice for each raw_scan given as input
+# Please set the directories path in the following folder before executing the script.
 
 def slice_model():
     """
-    Test the Slice Selction Model
+    Test the Slice Selection Model
     Args:
         Input Scans -- nrrd files
         Model -- C3_Top_Selection_Model_Weight.hdf5 
@@ -17,7 +19,7 @@ def slice_model():
     """
     proj_dir = '/mnt/kannlab_rfa/Zezhong/c3_segmentation'
     raw_img_dir = proj_dir + '/data/train_data/test_img'
-    raw_seg_dir = proj_dir + '/data/train_data/test_seg'
+    #raw_seg_dir = proj_dir + '/data/train_data/test_seg'
     model_path = proj_dir + '/model/test/C3_Top_Selection_Model_Weight.hdf5'
     slice_csv_path = proj_dir + '/data/slice_selection/C3_slice_sum.csv'
     output_csv_path = proj_dir + '/internal_test/slice_model/slice_sum.csv'
@@ -46,7 +48,7 @@ if __name__ == '__main__':
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     warnings.filterwarnings('ignore')
 
-    #slice_model()
+    slice_model()
     combine_csv()
 
 
