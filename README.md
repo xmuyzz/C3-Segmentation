@@ -17,10 +17,10 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 
 2. Make sure the input files are stored in the following folder
 
-   Raw scans - /data/raw/
+   Raw scans - /data/raw_img/
 
    Suggested directories for storing the data processed in the scripts:
-   Pre-processed Scans - /data/preprocessed
+   Pre-processed Scans - /data/prepro_img
    Slice Selection Output CSV - /data/test/output_scv
    Segmentation Model Output - /data/test/output_segmentation 
   
@@ -31,17 +31,22 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 
 1. 'src/Preprocess_test_data.py'
 
-2. 'Test_slice_model.py'
+      Set the proj_dir, img_dir, and seg_dir folder paths in the main function before executing the code.
+      This script preprocesses the raw scans. The steps involve respacing the input files to 1x1, cropping by 256x256, and resizing to 512x512 along the XY plane.
+      - Input: Data folder raw CT scans under the folder of '../data/raw_img'
+      - Out_put: Preprocessed files in the folder '..data/prepro_img'
+    
+3. 'Test_slice_model.py'
 
-3. 'Test_segmentation_model.py'
+4. 'Test_segmentation_model.py'
 
-4. 'get_dice.py'
+5. 'get_dice.py'
 
-5. 'statistics.py'
+6. 'statistics.py'
 
-6. 'visualize.py'
+7. 'visualize.py'
 
-7. 'clinical.py'
+8. 'clinical.py'
 
 1. `main.py`  
      Step 1: Execute Slice Selection Model first to select the C3 slice from the raw CT scan file provided as input. (No pre-processing of the raw scans are needed for this step) 
