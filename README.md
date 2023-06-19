@@ -77,11 +77,10 @@ https://drive.google.com/drive/folders/1A3NlgyvlhXL6pgR0weXT4c-XygGl6r-M?usp=dri
 6. 'statistics.py'
 
 	Set the proj_dir, raw_img_dir, raw_seg_dir, Slice Prediction CSV, and output_dir directories before executing the code. 
-	This script generates the Cross-Sectional Area (CSA) of the C3 Skeletal Muscle Mass from the auto-segmented masks.
-   	- Input#1 : Auto segmentation files
- 	- Input#2: Manual segmentation files of test data
- 	- Input#3: C3_Top_Slice_Prediction.csv
- 	- Output: CSA in a CSV file
+	This script calculates the Cohen Kappa score of the trained radiologist's ratings on the auto-segmented mask quality.
+   	- Input#1: Auto segmentation files
+ 	- Input#2: C3_Top_Slice_Prediction.csv
+ 	  
 
 
 7. 'visualize.py'
